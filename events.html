@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Scores Widget</title>
+    <style>
+        .widget {
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 300px;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="widget" id="scoreWidget">
+        <h3>Live Scores</h3>
+        <div id="scores">Loading...</div>
+    </div>
+    <script>
+        async function fetchScores() {
+            try {
+                const response = await fetch('https://api.thescore.com/nba/events/upcoming?limit=10&rpp=10'); // Replace with your API URL
+                const data = await response.json();
+                document.getElementById('scores').innerText = `Score: ${data.score}`;
+            } catch (error) {
+                document.getElementById('scores').innerText = 'Error loading scores.';
+            }
+        }
+        fetchScores();
+        setInterval(fetchScores, 60000); // Update every 60 seconds
+    </script>
+</body>
+</html>
