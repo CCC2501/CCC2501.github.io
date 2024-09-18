@@ -1,53 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upcoming NBA Events</title>
     <style>
-        .widget {
-            border: 1px solid #ccc;
-            padding: 10px;
-            width: 300px;
-            font-family: Arial, sans-serif;
-        }
-        .event {
-            margin-bottom: 10px;
-        }
+        body { font-family: Arial, sans-serif; }
+        #events { list-style-type: none; padding: 0; }
+        #events li { margin: 10px 0; }
     </style>
 </head>
 <body>
-    <div class="widget" id="eventWidget">
-        <h3>Upcoming NBA Events</h3>
-        <div id="events">Loading...</div>
-    </div>
+    <h1>Upcoming NBA Events</h1>
+    <ul id="events"></ul>
+
     <script>
-        async function fetchEvents() {
-            try {
-                const response = await fetch('https://api.thescore.com/nba/events/upcoming?limit=10&rpp=10');
-                const data = await response.json();
-                console.log(data); // For debugging
-                
-                // Assuming data has an array of events under 'events'
-                const events = data.events; 
-                
-                if (events && events.length) {
-                    document.getElementById('events').innerHTML = events.map(event => `
-                        <div class="event">
-                            <strong>${event.name}</strong><br>
-                            Date: ${new Date(event.date).toLocaleDateString()}
-                        </div>
-                    `).join('');
-                } else {
-                    document.getElementById('events').innerText = 'No upcoming events.';
-                }
-            } catch (error) {
-                document.getElementById('events').innerText = 'Error loading events.';
-                console.error('Error fetching events:', error);
-            }
-        }
-        fetchEvents();
-        setInterval(fetchEvents, 60000); // Refresh every 60 seconds
+        // Replace with the actual API endpoint for upcoming NBA events
+        const apiUrl = 'https://api.thescore.com/nba/events/upcoming?limit=10&rpp=10';
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const eventsList = document.getElementById('events');
+                data.events.forEach(event => {
+                    const listItem = document.createElement('li');
+                    const eventDate = new Date(event.date).toLocaleString();
+                    listItem.textContent = `${event.home_team.name} vs ${event.away_team.name} on ${eventDate}`;
+                    eventsList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
     </script>
 </body>
 </html>
